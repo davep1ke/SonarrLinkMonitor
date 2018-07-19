@@ -71,8 +71,14 @@ namespace SonarrLinkMonitor
                                         string filename = Settings.destinationFolder + @"/" + Path.GetFileNameWithoutExtension(token.ToString()) + ".lnk";
                                         string destination = token.ToString();
 
-                                        //apply any replacemenbts
-                                        foreach (replacement r in Settings.replacements)
+                                        //invalid chars
+                                        foreach (char invalidchar in System.IO.Path.GetInvalidFileNameChars())
+                                        {
+                                            filename = filename.Replace(invalidchar, '_');
+                                        }
+
+                                    //apply any replacements
+                                    foreach (replacement r in Settings.replacements)
                                         {
                                             destination = destination.Replace(r.source, r.replace);
                                         }
@@ -83,6 +89,7 @@ namespace SonarrLinkMonitor
                                         shortcut.TargetPath = destination;
                                         shortcut.Save();
 
+                                        
                                         //log it
                                         Settings.recentGrabs.Add(new grabbedFile(token.ToString()));
                                     }

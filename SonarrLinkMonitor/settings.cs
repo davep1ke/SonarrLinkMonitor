@@ -27,6 +27,7 @@ namespace SonarrLinkMonitor
                 TextReader textReader = new StreamReader(@"sett.ings");
                 settings setts = (settings)deserializer.Deserialize(textReader);
                 textReader.Close();
+                setts.trimHistory();
                 return setts;
             }
 
