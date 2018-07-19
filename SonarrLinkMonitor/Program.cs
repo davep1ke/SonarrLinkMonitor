@@ -68,30 +68,47 @@ namespace SonarrLinkMonitor
                                     else
                                     {
                                         Console.Out.WriteLine("Processing        " + token.ToString());
-                                        string filename = Settings.destinationFolder + @"/" + Path.GetFileNameWithoutExtension(token.ToString()) + ".lnk";
-                                        string destination = token.ToString();
-
+                                        string filename = Path.GetFileNameWithoutExtension(token.ToString());
+                                        
                                         //invalid chars
                                         foreach (char invalidchar in System.IO.Path.GetInvalidFileNameChars())
                                         {
                                             filename = filename.Replace(invalidchar, '_');
                                         }
 
+                                        filename = Settings.destinationFolder + @"/" + filename + ".lnk";
+                                        string destination = token.ToString();
+
+                                        
+
                                     //apply any replacements
                                     foreach (replacement r in Settings.replacements)
-                                        {
-                                            destination = destination.Replace(r.source, r.replace);
-                                        }
+                                    {
+                                        destination = destination.Replace(r.source, r.replace);
+                                    }
 
-                                        //craete the link file. 
-                                        var wsh = new IWshShell_Class();
+                                    //craete the link file. 
+                                    var wsh = new IWshShell_Class();
+                                    try
+                                    {
                                         IWshRuntimeLibrary.IWshShortcut shortcut = wsh.CreateShortcut(filename) as IWshRuntimeLibrary.IWshShortcut;
                                         shortcut.TargetPath = destination;
                                         shortcut.Save();
+                                    }
 
-                                        
-                                        //log it
-                                        Settings.recentGrabs.Add(new grabbedFile(token.ToString()));
+                                    catch (Exception e)
+                                    {
+
+                                        Console.Out.WriteLine("-----------------");
+                                        Console.Out.WriteLine(filename);
+                                        Console.Out.WriteLine(e.Message);
+                                        Console.Out.WriteLine(e.InnerException);
+                                        Console.Out.WriteLine(e.StackTrace);
+                                        Console.Out.WriteLine("-----------------");
+
+                                    }
+                                    //log it
+                                    Settings.recentGrabs.Add(new grabbedFile(token.ToString()));
                                     }
                                 }
 
@@ -106,6 +123,10 @@ namespace SonarrLinkMonitor
             {
                 Console.Out.WriteLine("-----------------");
                 Console.Out.WriteLine(e.Message);
+                Console.Out.WriteLine(e.InnerException);
+                Console.Out.WriteLine(e.StackTrace);
+                Console.Out.WriteLine(e.ToString());
+
             }
 
         }
