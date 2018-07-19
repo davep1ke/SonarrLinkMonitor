@@ -78,7 +78,7 @@ namespace SonarrLinkMonitor
             bool quitloop = false;
             while (!quitloop)
             {
-                if (recentGrabs.Count > 1000)
+                if (recentGrabs.Count > 2000)
                 {
                     Console.Out.WriteLine("Removing " + recentGrabs[0].filename + " from history");
                     recentGrabs.RemoveAt(0);
