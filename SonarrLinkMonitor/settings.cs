@@ -17,14 +17,16 @@ namespace SonarrLinkMonitor
         public string sonarrAPI;
         public string destinationFolder; //todo, make sure no trailing '/'
         public int sonarrMaxHistory = 200;
-        
+
+        public static string foldername = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SonarrLinkMonitor\";
+        private static string filename = foldername + "sett.ings";
 
         public static settings load()
         {
             try
             {
                 XmlSerializer deserializer = new XmlSerializer(typeof(settings));
-                TextReader textReader = new StreamReader(@"sett.ings");
+                TextReader textReader = new StreamReader(filename);
                 settings setts = (settings)deserializer.Deserialize(textReader);
                 textReader.Close();
                 setts.trimHistory();
@@ -32,40 +34,42 @@ namespace SonarrLinkMonitor
             }
 
 
-            catch (System.IO.FileNotFoundException)
-            {
-                //create a new one
-                settings sets = new settings();
 
-                #region populate defaults
-                // TODO remove
-                sets.sonarrURL = "http://davepine:8089";
-                sets.sonarrAPI = "8ef5ec83eaa041299ab5296dcb1ed36a";
-                sets.destinationFolder = @"C:\temp";
-
-                sets.replacements.Add(new replacement(@"F:\eps\", @"\\davepine\eps2\"));
-                sets.replacements.Add(new replacement(@"D:\eps\", @"\\davepine\eps\"));
-
-                #endregion
-                return sets;
-
-            }
 
             catch (Exception e)
             {
-                
-                string n = e.ToString();
+                if (e is System.IO.FileNotFoundException || e is System.IO.IOException)
+                {
+                    //create a new one
+                    settings sets = new settings();
+
+                    #region populate defaults
+                    // TODO remove
+                    sets.sonarrURL = "http://davepine:8089";
+                    sets.sonarrAPI = "8ef5ec83eaa041299ab5296dcb1ed36a";
+                    sets.destinationFolder = @"C:\temp";
+
+                    sets.replacements.Add(new replacement(@"F:\eps\", @"\\davepine\eps2\"));
+                    sets.replacements.Add(new replacement(@"D:\eps\", @"\\davepine\eps\"));
+
+                    #endregion
+                    return sets;
+
+                }
+                throw;
             }
-
-            return null;
-
         }
 
         public void save()
         {
+            DirectoryInfo di = new DirectoryInfo(foldername);
+            if (!di.Exists)
+            {
+                di.Create();
+            }
 
             XmlSerializer serializer = new XmlSerializer(typeof(settings));
-            TextWriter textWriter = new StreamWriter(@"sett.ings");
+            TextWriter textWriter = new StreamWriter(filename);
             serializer.Serialize(textWriter, this);
             textWriter.Close();
         }
