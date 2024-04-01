@@ -49,8 +49,6 @@ namespace SonarrLinkMonitor
                         JsonDocument jo = JsonDocument.Parse(response);
 
 
-
-
                         //open the response and parse it using JSON. Query for newly imported files
                         foreach (JsonElement element in jo.RootElement.GetProperty("records").EnumerateArray())
                         {

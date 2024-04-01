@@ -8,6 +8,7 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <BaseOutputPath>D:\owncloud\Code\builds\SonarrLinkMonitor</BaseOutputPath>
 
   </PropertyGroup>
 
