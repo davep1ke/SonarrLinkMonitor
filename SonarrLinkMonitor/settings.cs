@@ -52,6 +52,7 @@ namespace SonarrLinkMonitor
                     sets.replacements.Add(new replacement(@"F:\eps\", @"\\davepine\eps2\"));
                     sets.replacements.Add(new replacement(@"D:\eps\", @"\\davepine\eps\"));
 
+                    sets.save();
                     #endregion
                     return sets;
 
